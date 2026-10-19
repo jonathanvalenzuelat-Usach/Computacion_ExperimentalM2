@@ -129,15 +129,21 @@ Variables opcionales: `SEED` (por defecto 42), `REPS` (10), `SIZES` ("500 1000 1
 
 ## 9. Entorno de ejecución
 
-El script `record_env.py` guarda procesador, núcleos, memoria RAM, sistema operativo, arquitectura y versiones de compiladores e intérpretes en `results/environment.md` y `results/environment.json`. **Pegar aquí el contenido de `environment.md` después de la ejecución final.**
+Equipo utilizado para todas las mediciones: **HP EliteBook 840 G8 Notebook PC**.
 
 | Característica | Valor |
 |---|---|
-| Procesador | _completar tras ejecutar_ |
-| RAM | _completar_ |
-| Sistema operativo | _completar_ |
-| Arquitectura | _completar_ |
-| g++ / Go / Java / Python | _completar_ |
+| Procesador | 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80 GHz |
+| Núcleos / hilos | 4 / 8 (especificación del fabricante) |
+| RAM | 16,0 GB instalados (15,7 GB utilizables), 3200 MT/s |
+| Sistema operativo | Windows 11 Pro, versión 26H2, compilación 26300.9711 |
+| Arquitectura | Sistema operativo de 64 bits, procesador x64 |
+| g++ | _completar tras ejecutar_ |
+| Go | _completar_ |
+| Java (JDK) | _completar_ |
+| Python | _completar_ |
+
+Las versiones de compiladores e intérpretes las registra `scripts/record_env.py` en `results/environment.md` y `results/environment.json` al ejecutar el experimento; **pegar aquí esos valores después de la ejecución final**. Si el experimento se ejecuta dentro de WSL, esos archivos reflejan el entorno de WSL (distribución Linux y versiones instaladas allí), que es el que debe documentarse junto con los datos de hardware anteriores.
 
 ## 10. Primeros resultados
 
