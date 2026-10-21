@@ -129,25 +129,54 @@ Variables opcionales: `SEED` (por defecto 42), `REPS` (10), `SIZES` ("500 1000 1
 
 ## 9. Entorno de ejecución
 
-Equipo utilizado para todas las mediciones: **HP EliteBook 840 G8 Notebook PC**.
+Equipo utilizado para todas las mediciones: **HP EliteBook 840 G8 Notebook PC**. El experimento se ejecutó de forma **nativa en Windows 11** (sin WSL ni contenedores). Los datos del entorno de software los registró `scripts/record_env.py` el 2026-10-21 (UTC) en `results/environment.md`.
 
 | Característica | Valor |
 |---|---|
 | Procesador | 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80 GHz |
-| Núcleos / hilos | 4 / 8 (especificación del fabricante) |
+| Núcleos lógicos | 8 (4 núcleos físicos según la especificación del fabricante) |
 | RAM | 16,0 GB instalados (15,7 GB utilizables), 3200 MT/s |
 | Sistema operativo | Windows 11 Pro, versión 26H2, compilación 26300.9711 |
-| Arquitectura | Sistema operativo de 64 bits, procesador x64 |
-| g++ | _completar tras ejecutar_ |
-| Go | _completar_ |
-| Java (JDK) | _completar_ |
-| Python | _completar_ |
+| Arquitectura | 64 bits, x64 (AMD64) |
+| g++ | g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.2.0 |
+| Go | go1.27.0 windows/amd64 |
+| Java | OpenJDK 21.0.12.1 LTS (javac 21.0.12.1) |
+| Python | 3.14.7 (CPython) |
 
-Las versiones de compiladores e intérpretes las registra `scripts/record_env.py` en `results/environment.md` y `results/environment.json` al ejecutar el experimento; **pegar aquí esos valores después de la ejecución final**. Si el experimento se ejecuta dentro de WSL, esos archivos reflejan el entorno de WSL (distribución Linux y versiones instaladas allí), que es el que debe documentarse junto con los datos de hardware anteriores.
+**Opciones de compilación y ejecución:**
+
+| Lenguaje | Opciones |
+|---|---|
+| C++ | `g++ -O2 -std=c++17 -ffp-contract=off` |
+| Go | `go build` (valores por defecto) |
+| Java | `javac` / `java` (valores por defecto) |
+| Python | CPython sin extensiones, sin NumPy |
 
 ## 10. Primeros resultados
 
-_Pendiente: ejecutar `./scripts/run_all.sh` y copiar aquí la tabla de `results/summary.md`._
+Ejecución completa (4 lenguajes × 3 tamaños × 10 repeticiones = 120 mediciones) en el equipo descrito en la sección 9. Datos crudos en `results/cpp.csv`, `go.csv`, `java.csv` y `python.csv`; estadística descriptiva en `results/summary.md`.
+
+| N | Lenguaje | Media (s) | Desv. est. (s) | Razón respecto de C++ |
+|---|---|---|---|---|
+| 500 | C++ | 0,1012 | 0,0002 | 1,00 |
+| 500 | Go | 0,1117 | 0,0043 | 1,10 |
+| 500 | Java | 0,1101 | 0,0014 | 1,09 |
+| 500 | Python | 10,2099 | 0,0835 | 100,9 |
+| 1000 | C++ | 0,9430 | 0,0022 | 1,00 |
+| 1000 | Go | 1,0630 | 0,0058 | 1,13 |
+| 1000 | Java | 1,4950 | 0,0141 | 1,59 |
+| 1000 | Python | 90,9261 | 0,1993 | 96,4 |
+| 1500 | C++ | 4,3470 | 0,4513 | 1,00 |
+| 1500 | Go | 7,7272 | 0,6461 | 1,78 |
+| 1500 | Java | 4,5887 | 0,0857 | 1,06 |
+| 1500 | Python | 350,8686 | 3,2535 | 80,7 |
+
+**Lectura preliminar (sin pruebas de significancia, que se harán en la semana 4):**
+
+- Python es entre 80 y 100 veces más lento que C++ en los tres tamaños, una diferencia muy superior a la variabilidad entre repeticiones.
+- Entre C++, Go y Java las diferencias son pequeñas en N = 500 y cambian de orden según N: Java queda más lejos de C++ en N = 1000 (1,59×) y casi empata en N = 1500 (1,06×), mientras que Go se aleja en N = 1500 (1,78×).
+- El tiempo crece aproximadamente de forma cúbica con N en Python (×8,9 de 500 a 1000 y ×3,9 de 1000 a 1500, frente a ×8 y ×3,4 teóricos). En C++, Go y Java las razones se desvían más del valor teórico, lo que sugiere efectos de memoria caché y de otro tipo que habrá que analizar.
+- En N = 1500, C++ y Go muestran una variabilidad mayor (coeficiente de variación de 10 % y 8 %), con las primeras repeticiones más lentas que las últimas.
 
 ## 11. Análisis estadístico planificado (Semana 4)
 
@@ -178,6 +207,7 @@ Según ACM, no se exige un resultado idéntico, sino acuerdo dentro de una toler
 - **Validez de constructo:** el algoritmo naive mide más la calidad del compilador y del runtime que la "velocidad del lenguaje". Las conclusiones se limitan a estas implementaciones y versiones. El nivel de optimización de C++ (`-O2`) condiciona el resultado.
 - **Validez externa:** los resultados dependen de la arquitectura y del sistema operativo.
 - **Muestra:** 10 repeticiones por condición dan pocos datos para estimar la variabilidad.
+- **Variabilidad observada:** en N = 1500, C++ y Go presentan repeticiones iniciales más lentas que las finales. Puede deberse a la frecuencia de la CPU o a procesos en segundo plano del sistema operativo; no se ha podido confirmar.
 - **Costo:** Python puro con N = 1500 es mucho más lento que el resto y domina el tiempo total de ejecución.
 
 ## 14. Cronograma del módulo
