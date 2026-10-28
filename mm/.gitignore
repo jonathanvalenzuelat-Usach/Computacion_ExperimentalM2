@@ -1,0 +1,56 @@
+# Keep only the main README at the project root
+**/README.md
+!/README.md
+
+# Build outputs and generated artifacts
+bin/
+build/
+dist/
+out/
+target/
+*.class
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.exe
+*.out
+*.a
+*.lib
+*.jar
+*.war
+*.ear
+matmul-imagenes.tar
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+pip-wheel-metadata/
+.python-version
+node_modules/
+
+# Go build outputs
+*.test
+
+# Java / IDE metadata
+.gradle/
+.mvn/
+.idea/
+*.iml
+.vscode/
+.history/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log

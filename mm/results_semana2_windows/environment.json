@@ -1,0 +1,23 @@
+{
+  "fecha_utc": "2026-10-21T04:05:43+00:00",
+  "procesador": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+  "nucleos_logicos": 8,
+  "ram_gib": null,
+  "sistema_operativo": "Windows 11",
+  "kernel": "11",
+  "arquitectura": "AMD64",
+  "gobernador_cpu": "no disponible",
+  "versiones": {
+    "g++": "g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.2.0",
+    "go": "go version go1.27.0 windows/amd64",
+    "javac": "javac 21.0.12.1",
+    "java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS",
+    "python": "Python 3.14.7"
+  },
+  "banderas_compilacion": {
+    "cpp": "g++ -O2 -std=c++17 -ffp-contract=off",
+    "go": "go build (valores por defecto)",
+    "java": "javac / java (valores por defecto)",
+    "python": "CPython sin extensiones, sin NumPy"
+  }
+}

@@ -1,0 +1,7 @@
+language: cpp
+version: g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+so: "Ubuntu 24.04.5 LTS"
+kernel: 6.18.33.2-microsoft-standard-WSL2
+arquitectura: x86_64
+nucleos_visibles: 8
+ram_total: 7970428 kB

@@ -1,0 +1,15 @@
+FROM ubuntu:24.04
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    g++ golang-go openjdk-21-jdk-headless python3 \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY src/cpp/matmul.cpp ./cpp/
+COPY src/go/ ./go/
+COPY src/java/MatMul.java ./java/
+COPY src/python/matmul.py ./python/
+RUN g++ -O2 -std=c++17 -ffp-contract=off cpp/matmul.cpp -o matmul_cpp \
+ && (cd go && go build -o ../matmul_go .) \
+ && javac -d java java/MatMul.java
+COPY docker/run_container.sh docker/run_lang.sh ./
+RUN sed -i 's/\r$//' run_container.sh run_lang.sh && chmod +x run_container.sh run_lang.sh
+ENTRYPOINT ["/app/run_lang.sh"]

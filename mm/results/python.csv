@@ -1,0 +1,7 @@
+language,N,repetition,time_seconds
+python,100,1,0.113163273
+python,100,2,0.090895854
+python,100,3,0.098955267
+python,200,1,0.630114953
+python,200,2,0.589824535
+python,200,3,0.621256230

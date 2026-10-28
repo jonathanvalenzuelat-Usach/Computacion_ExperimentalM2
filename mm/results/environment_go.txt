@@ -1,0 +1,7 @@
+language: go
+version: go version go1.22.2 linux/amd64
+so: "Ubuntu 24.04.5 LTS"
+kernel: 6.18.33.2-microsoft-standard-WSL2
+arquitectura: x86_64
+nucleos_visibles: 8
+ram_total: 7970428 kB

@@ -1,0 +1,7 @@
+language: java
+version: openjdk version "21.0.12.1" 2026-08-18
+so: "Ubuntu 24.04.5 LTS"
+kernel: 6.18.33.2-microsoft-standard-WSL2
+arquitectura: x86_64
+nucleos_visibles: 8
+ram_total: 7970428 kB
