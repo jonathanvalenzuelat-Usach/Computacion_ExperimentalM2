@@ -3,7 +3,7 @@
 **Autor:** Jonathan Alexis Valenzuela Tapia
 **Programa:** Doctorado en Ingeniería en Informática, Universidad de Santiago de Chile (USACH)
 **Curso:** Experimentación Computacional, módulo *Documentación de experimentos (Reproducibilidad y Replicabilidad)*
-**Estado:** Semana 2, implementación y ejecución del experimento (versión 0.2)
+**Estado:** Semana 3, entorno reproducible con Docker y evaluación funcional del artifact (versión 0.3)
 
 ---
 
@@ -97,19 +97,24 @@ Además se genera `results/checksums.txt` (un valor por lenguaje y tamaño) y `r
 │   ├── go/matmul.go  (+ go.mod)
 │   ├── java/MatMul.java
 │   └── python/matmul.py
+├── docker/
+│   ├── Dockerfile.cpp  Dockerfile.go  Dockerfile.java  Dockerfile.python
+│   ├── Dockerfile.all      # opcional: una sola imagen con los cuatro lenguajes
+│   ├── run_container.sh    # ejecuta un lenguaje dentro del contenedor
+│   └── run_lang.sh         # selector de lenguaje para Dockerfile.all
 ├── scripts/
-│   ├── run_all.sh          # compila y ejecuta todo el experimento
+│   ├── run_all.sh          # ejecución sin Docker (Linux, macOS o WSL)
 │   ├── gen_order.py        # orden aleatorizado de los bloques
 │   ├── record_env.py       # registra el entorno de ejecución
 │   ├── verify.py           # valida los CSV y compara checksums
 │   └── summarize.py        # estadística descriptiva
-└── results/
-    ├── cpp.csv  go.csv  java.csv  python.csv
-    ├── checksums.txt  summary.md
-    └── environment.json  environment.md
+├── results_semana2_windows/   # resultados de la Semana 2 (ejecución nativa en Windows)
+│   ├── cpp.csv  go.csv  java.csv  python.csv
+│   └── summary.md  environment.md
+└── results/                # se genera al ejecutar los contenedores (no se versiona)
 ```
 
-## 8. Cómo ejecutar
+## 8. Cómo ejecutar sin Docker (Semana 2)
 
 **Requisitos (Linux, macOS o WSL):** `g++` (C++17), Go 1.21 o superior, JDK 17 o superior (`javac` y `java`) y Python 3.8 o superior. Con las herramientas ya instaladas, basta un comando:
 
@@ -125,11 +130,83 @@ SIZES="100 200" REPS=3 ./scripts/run_all.sh
 
 Variables opcionales: `SEED` (por defecto 42), `REPS` (10), `SIZES` ("500 1000 1500") y `LANGS_ONLY` (por ejemplo `"cpp go"`).
 
-**Duración estimada:** en una prueba preliminar, Python tardó unos 11 s por repetición con N = 500, y su tiempo crece de forma cúbica. Se espera que el experimento completo demore entre 1,5 y 2 horas, casi todo en Python con N = 1000 y N = 1500. Conviene ejecutarlo con el equipo enchufado y sin otras tareas pesadas.
+**Duración:** en el equipo de la sección 9, Python tardó en promedio 10 s por repetición con N = 500, 91 s con N = 1000 y 351 s con N = 1500, de modo que el experimento completo toma algo más de una hora, casi todo en Python. Conviene ejecutarlo con el equipo enchufado y sin otras tareas pesadas.
+
+## 8.1 Ejecución con Docker (Semana 3)
+
+Cada lenguaje tiene su propia imagen, que se **construye manualmente** a partir de los archivos de `docker/`. No se utilizan imágenes del experimento publicadas en registros: la única imagen externa es la base `ubuntu:24.04`, sobre la cual cada Dockerfile instala solo la herramienta de su lenguaje (g++, Go, OpenJDK 21 o Python 3), compila el código y define cómo ejecutarlo.
+
+**Requisitos:** Docker Desktop (Windows o macOS) o Docker Engine (Linux), y Python 3 en el equipo anfitrión solo para validar los resultados con `scripts/verify.py`.
+
+**1. Obtener el repositorio**
+
+```bash
+git clone <URL-del-repositorio>
+cd matmul-benchmark
+```
+
+**2. Construir las cuatro imágenes** (desde la raíz del repositorio; el punto final es necesario):
+
+```bash
+docker build -f docker/Dockerfile.cpp    -t matmul-cpp    .
+docker build -f docker/Dockerfile.go     -t matmul-go     .
+docker build -f docker/Dockerfile.java   -t matmul-java   .
+docker build -f docker/Dockerfile.python -t matmul-python .
+docker images
+```
+
+**3. Prueba rápida** (tamaños pequeños, 3 repeticiones). En PowerShell se usa `${PWD}`; en bash, `$(pwd)`.
+
+```powershell
+# PowerShell
+foreach ($l in "cpp","go","java","python") {
+  docker run --rm -e SIZES="100 200" -e REPS=3 -v "${PWD}/results:/app/results" matmul-$l
+}
+```
+
+```bash
+# bash
+for l in cpp go java python; do
+  docker run --rm -e SIZES="100 200" -e REPS=3 -v "$(pwd)/results:/app/results" matmul-$l
+done
+```
+
+**4. Verificar** (debe terminar con `TODO OK`):
+
+```bash
+python3 scripts/verify.py 100,200 3
+```
+
+**5. Ejecución completa** (N = 500, 1000 y 1500, con 10 repeticiones). Antes, borra los archivos de la prueba (`results/`):
+
+```powershell
+foreach ($l in "cpp","go","java","python") {
+  docker run --rm -v "${PWD}/results:/app/results" matmul-$l
+}
+python scripts\verify.py
+```
+
+**Resultados generados** en `results/`: `cpp.csv`, `go.csv`, `java.csv` y `python.csv` (columnas `language,N,repetition,time_seconds`), `checksums.txt` y un `environment_<lenguaje>.txt` por contenedor, con el sistema operativo, el kernel, los núcleos y la memoria visibles y la versión del compilador o intérprete.
+
+**Variables opcionales:** `SIZES` (por defecto `"500 1000 1500"`), `REPS` (10) y `SEED` (42), que se pasan con `-e`. Si se repite una ejecución, borrar antes `results/checksums.txt`, porque cada contenedor agrega líneas a ese archivo.
+
+**Imagen única (opcional).** `docker/Dockerfile.all` reúne los cuatro lenguajes en una sola imagen:
+
+```bash
+docker build -f docker/Dockerfile.all -t matmul-todo .
+docker run --rm -v "$(pwd)/results:/app/results" matmul-todo all     # o: cpp | go | java | python
+```
+
+**Consideraciones sobre la comparabilidad:**
+
+- Las cuatro imágenes comparten el mismo sistema base y ejecutan los mismos programas con los mismos argumentos, semilla y criterio de medición de la Semana 2.
+- En Windows y macOS, Docker Desktop ejecuta los contenedores Linux dentro de una máquina virtual, por lo que los tiempos difieren de los de una ejecución nativa (carpeta `results_semana2_windows/`). No son comparables entre sí; los análisis deben usar un único origen de datos.
+- Las versiones de las herramientas son las que instala `apt` en Ubuntu 24.04 al momento de construir la imagen, y se registran en cada `environment_<lenguaje>.txt`.
+- Los recursos de CPU y memoria asignados a Docker Desktop (Settings, Resources) afectan las mediciones. Conviene desactivar el modo de ahorro de recursos y no usar el equipo durante la ejecución.
 
 ## 9. Entorno de ejecución
 
-Equipo utilizado para todas las mediciones: **HP EliteBook 840 G8 Notebook PC**. El experimento se ejecutó de forma **nativa en Windows 11** (sin WSL ni contenedores). Los datos del entorno de software los registró `scripts/record_env.py` el 2026-10-21 (UTC) en `results/environment.md`.
+Equipo utilizado para todas las mediciones: **HP EliteBook 840 G8 Notebook PC**. El experimento se ejecutó de forma **nativa en Windows 11** (sin WSL ni contenedores). Los datos del entorno de software los registró `scripts/record_env.py` el 2026-10-21 (UTC) en `results_semana2_windows/environment.md`.
 
 | Característica | Valor |
 |---|---|
@@ -154,7 +231,7 @@ Equipo utilizado para todas las mediciones: **HP EliteBook 840 G8 Notebook PC**.
 
 ## 10. Primeros resultados
 
-Ejecución completa (4 lenguajes × 3 tamaños × 10 repeticiones = 120 mediciones) en el equipo descrito en la sección 9. Datos crudos en `results/cpp.csv`, `go.csv`, `java.csv` y `python.csv`; estadística descriptiva en `results/summary.md`.
+Ejecución completa (4 lenguajes × 3 tamaños × 10 repeticiones = 120 mediciones) en el equipo descrito en la sección 9. Datos crudos en `results_semana2_windows/cpp.csv`, `go.csv`, `java.csv` y `python.csv`; estadística descriptiva en `results_semana2_windows/summary.md`. Corresponden a la ejecución nativa de la Semana 2, no a la ejecución en contenedores.
 
 | N | Lenguaje | Media (s) | Desv. est. (s) | Razón respecto de C++ |
 |---|---|---|---|---|
@@ -215,8 +292,8 @@ Según ACM, no se exige un resultado idéntico, sino acuerdo dentro de una toler
 | Semana | Entregable |
 |---|---|
 | 1 | Repositorio y README inicial: diseño experimental |
-| 2 | Implementación y ejecución: cuatro CSV por lenguaje y registro del entorno (este documento) |
-| 3 | Entornos Docker y evaluación funcional del artifact |
+| 2 | Implementación y ejecución: cuatro CSV por lenguaje y registro del entorno |
+| 3 | Entornos Docker y evaluación funcional del artifact (este documento) |
 | 4 | Pipeline Snakemake y análisis estadístico (ANOVA de dos factores, Tukey HSD) |
 | 5 | Publicación en Zenodo (DOI) y evaluación cruzada |
 
