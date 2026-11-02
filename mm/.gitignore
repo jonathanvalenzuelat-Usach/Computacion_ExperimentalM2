@@ -5,6 +5,7 @@
 # Build outputs and generated artifacts
 .snakemake/
 results/logs/
+results/validated.ok
 bin/
 build/
 dist/
