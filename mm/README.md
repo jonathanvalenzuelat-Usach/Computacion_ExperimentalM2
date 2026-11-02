@@ -3,7 +3,7 @@
 **Autor:** Jonathan Alexis Valenzuela Tapia  
 **Programa:** Doctorado en Ingeniería en Informática, USACH  
 **Curso:** Experimentación Computacional  
-**Estado:** Semana 4, pipeline Snakemake ejecutado y resultados validados
+**Versión:** 1.0.0 (semana 5; DOI Zenodo pendiente de publicación)
 
 ## Descripción general
 
@@ -55,6 +55,13 @@ La implementación sigue una estrategia equivalente en los cuatro casos: mismo a
 ├── Snakefile
 ├── config.yaml
 ├── requirements.txt
+├── requirements-lock.txt     # dependencias exactas para Python 3.12
+├── LICENSE                 # código, licencia MIT
+├── LICENSE-DATA.md         # resultados y documentación, CC BY 4.0
+├── DATASHEET.md            # mini datasheet FAIR
+├── CITATION.cff            # metadatos de citación
+├── REVIEW-CROSS.md         # formulario de evaluación cruzada
+├── .dockerignore           # evita enviar resultados/binarios al build context
 ├── scripts/
 │   ├── run_all.sh
 │   ├── gen_order.py
@@ -76,7 +83,7 @@ La implementación sigue una estrategia equivalente en los cuatro casos: mismo a
 - Go 1.21+
 - JDK 17+
 - Python 3.8+
-- Python 3.11–3.13 en el host para Snakemake y el análisis estadístico
+- Python 3.12 en el host para Snakemake y el análisis estadístico (entorno validado)
 - Docker Desktop o Docker Engine
 - WSL2 con Linux para ejecutar Snakemake en Windows
 
@@ -109,13 +116,13 @@ docker build --pull -f docker/Dockerfile.java -t matmul-java .
 
 ## Pipeline automatizado con Snakemake
 
-Instala las dependencias del host una vez. En Windows, usa Python 3.12 (o 3.11/3.13) y Docker Desktop en modo Linux:
+Instala las dependencias del host una vez. Se probaron Python 3.12.10 y las versiones exactas de `requirements-lock.txt`. En Windows, usa Docker Desktop en modo Linux:
 
 ```powershell
-py -3.12 -m pip install -r requirements.txt
+py -3.12 -m pip install -r requirements-lock.txt
 ```
 
-En Linux o WSL2, instala los mismos requisitos con `python3 -m pip install -r requirements.txt`. Una vez construidas manualmente las cuatro imágenes, ejecuta desde `mm/`:
+En Linux o WSL2 con Python 3.12, instala los mismos requisitos con `python3 -m pip install -r requirements-lock.txt`. `requirements.txt` contiene las dependencias directas; para reproducir el entorno probado, prefiere el lockfile. Una vez construidas manualmente las cuatro imágenes, ejecuta desde `mm/`:
 
 ```bash
 snakemake --cores 1
@@ -155,6 +162,34 @@ La ejecución completa disponible en `results/` se validó: `benchmark.csv` cont
 
 Esta evaluación confirma el cumplimiento funcional de los requisitos de automatización y análisis de la semana 4, y facilita la reutilización del artifact; no constituye una certificación oficial de ACM. La pauta de esta semana no solicita pruebas de supuestos del ANOVA; por tanto, el análisis generado no incluye diagnósticos de normalidad de residuos ni homogeneidad de varianzas. Las inferencias deben leerse teniendo presente esa limitación.
 
+## Semana 5: versión archivada y evaluación cruzada
+
+### Contenido de esta versión
+
+La versión 1.0.0 incluye el código fuente de los cuatro lenguajes, los Dockerfiles, el workflow y su configuración, dependencias fijadas, scripts de validación/análisis, CSV individuales, `benchmark.csv`, checksums, registro del entorno, resultados estadísticos, tablas y gráfico. También incluye [LICENSE](LICENSE) (MIT para el software), [LICENSE-DATA.md](LICENSE-DATA.md) (CC BY 4.0 para datos/documentación), [DATASHEET.md](DATASHEET.md) (descripción FAIR), [CITATION.cff](CITATION.cff) y [REVIEW-CROSS.md](REVIEW-CROSS.md). Las licencias de Ubuntu y demás componentes de terceros no cambian.
+
+**DOI de Zenodo:** pendiente de crear y publicar el depósito. No cites un DOI hasta que Zenodo confirme la publicación. Cuando exista, añade el DOI y el enlace del registro a este README, a `CITATION.cff` y al README principal del repositorio GitHub.
+
+### Reproducción independiente para el evaluador
+
+1. Descarga la versión etiquetada/archivada o clona el repositorio y cambia a la carpeta `mm/`.
+2. Instala Docker Desktop o Docker Engine con soporte para contenedores Linux; en Windows puedes usar WSL2. Instala Python 3.12.
+3. Construye manualmente las cuatro imágenes desde esta carpeta con los cuatro comandos de la sección anterior. No descargues imágenes `matmul-*` de ningún registry.
+4. Instala las dependencias fijadas y ejecuta el workflow:
+
+   ```bash
+   python3 -m pip install -r requirements-lock.txt
+   snakemake --cores 1
+   ```
+
+   En PowerShell, usa `py -3.12 -m pip install -r requirements-lock.txt` para instalar y luego `snakemake --cores 1`. Verifica primero `docker info` si Docker no responde.
+5. Comprueba que se creen `results/cpp.csv`, `go.csv`, `python.csv`, `java.csv`, `benchmark.csv`, `analysis.md`, `anova.csv`, `tukey_hsd.csv`, `descriptive.csv` y `benchmark_by_language.png`. La validación de filas y checksums se ejecuta automáticamente; el workflow falla explícitamente si algo no coincide.
+6. Compara los tiempos con los resultados publicados: los tiempos exactos pueden variar entre máquinas. Comprueba los tamaños, recuentos, estructura, checksums y patrones estadísticos; registra las diferencias, mensajes de error, dependencias faltantes y cambios en [REVIEW-CROSS.md](REVIEW-CROSS.md).
+
+La primera reproducción puede tardar más de una hora, principalmente por Python con N=1500. `snakemake --cores 1 --forceall` fuerza una nueva medición completa. Para verificar únicamente la planificación, sin correr contenedores, usa `snakemake --cores 1 --dry-run`.
+
+El depósito de Zenodo solo se considerará publicado tras completar la publicación en Zenodo y obtener su DOI. La revisión cruzada por un estudiante externo tampoco se considera terminada hasta completar y guardar el registro de [REVIEW-CROSS.md](REVIEW-CROSS.md).
+
 ## Resultados esperados
 
 Los archivos CSV generados contienen columnas como:
@@ -184,11 +219,12 @@ El proyecto está diseñado para ser reproducible y reutilizable bajo los princi
 
 ## Licencia
 
-Por definir. Se recomienda usar una licencia abierta como MIT para el código y CC-BY 4.0 para la documentación.
+El software se distribuye bajo [MIT](LICENSE). Los resultados y la documentación se ofrecen bajo [CC BY 4.0](LICENSE-DATA.md). Revisa esos archivos para conocer las condiciones de reutilización.
 
 ## Referencias
 
 - Association for Computing Machinery. *Artifact Review and Badging.*
+- Zenodo. *Research data repository*. https://zenodo.org/
 
 ---
 

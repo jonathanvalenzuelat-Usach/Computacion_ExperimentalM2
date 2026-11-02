@@ -1,0 +1,10 @@
+.git
+.snakemake
+bin
+dist
+results
+results_semana2_windows
+matmul-benchmark-semana3
+matmul-imagenes.tar
+__pycache__
+*.py[cod]

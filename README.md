@@ -3,7 +3,7 @@
 **Autor:** Jonathan Alexis Valenzuela Tapia  
 **Programa:** Doctorado en Ingeniería en Informática, USACH  
 **Curso:** Experimentación Computacional  
-**Estado:** Semana 4, pipeline Snakemake ejecutado y resultados validados
+**Versión:** 1.0.0, artifact preparado para depósito en Zenodo
 
 ## Descripción general
 
@@ -42,7 +42,9 @@ La implementación sigue una estrategia equivalente en los cuatro casos: mismo a
 └── mm/
     ├── Snakefile
     ├── config.yaml
-    ├── requirements.txt
+    ├── requirements-lock.txt
+    ├── LICENSE / LICENSE-DATA.md
+    ├── DATASHEET.md
     ├── docker/       # Dockerfiles y runner de contenedor
     ├── scripts/      # benchmark, integración, validación y análisis
     ├── src/          # implementaciones C++, Go, Java y Python
@@ -73,7 +75,7 @@ SIZES="100 200" REPS=3 ./mm/scripts/run_all.sh
 
 ## Pipeline automatizado del artifact
 
-La versión con Docker y Snakemake está en [mm/](mm/); su guía completa está en [mm/README.md](mm/README.md). En Windows, ejecuta desde WSL2 con Docker Desktop integrado. Desde esa carpeta, construye manualmente las cuatro imágenes locales y luego ejecuta Snakemake:
+La versión con Docker y Snakemake está en [mm/](mm/); su guía completa está en [mm/README.md](mm/README.md). En Windows, usa Docker Desktop en modo Linux y PowerShell o WSL2. Desde esa carpeta, construye manualmente las cuatro imágenes locales y luego ejecuta Snakemake:
 
 ```bash
 cd mm
@@ -81,11 +83,17 @@ docker build --pull -f docker/Dockerfile.cpp -t matmul-cpp .
 docker build --pull -f docker/Dockerfile.go -t matmul-go .
 docker build --pull -f docker/Dockerfile.python -t matmul-python .
 docker build --pull -f docker/Dockerfile.java -t matmul-java .
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-lock.txt
 snakemake --cores 1
 ```
 
 La ejecución validada generó 120 mediciones (30 por lenguaje) en [benchmark.csv](mm/results/benchmark.csv) y los checksums coinciden entre lenguajes para los tres tamaños. El análisis detectó efectos significativos del lenguaje (p = 3,74 × 10⁻¹⁵³), tamaño (p = 5,04 × 10⁻¹²⁹) e interacción lenguaje × tamaño (p = 2,90 × 10⁻¹⁴⁸); por ello, el reporte presenta comparaciones de Tukey por estrato. Los resultados completos están en [analysis.md](mm/results/analysis.md), [anova.csv](mm/results/anova.csv) y [benchmark_by_language.png](mm/results/benchmark_by_language.png). La evidencia y evaluación requisito por requisito están en [mm/README.md](mm/README.md). La pauta de semana 4 no solicita diagnósticos de los supuestos del ANOVA; el análisis no los incluye, por lo que las inferencias deben leerse con esa limitación.
+
+## Publicación y reutilización (semana 5)
+
+La versión 1.0.0 incluye el código y el pipeline, resultados de referencia, [licencia MIT para el software](mm/LICENSE), [CC BY 4.0 para los datos y documentación](mm/LICENSE-DATA.md), [mini datasheet FAIR](mm/DATASHEET.md), metadatos de citación y una [plantilla de evaluación cruzada](mm/REVIEW-CROSS.md). Las instrucciones completas para quien evalúe el artifact están en [mm/README.md](mm/README.md).
+
+**DOI Zenodo:** pendiente de publicación y asignación. Este artifact aún no debe citarse como un depósito publicado; el DOI se añadirá aquí, en `mm/README.md` y en `mm/CITATION.cff` una vez que Zenodo confirme la publicación. Para las condiciones de uso, consulta la [licencia MIT del código](mm/LICENSE) y la [licencia CC BY 4.0 de los datos y documentación](mm/LICENSE-DATA.md).
 
 ## Ejecución con Docker
 
@@ -134,7 +142,7 @@ El proyecto está diseñado para ser reproducible y reutilizable bajo los princi
 
 ## Licencia
 
-Por definir. Se recomienda usar una licencia abierta como MIT para el código y CC-BY 4.0 para la documentación.
+El código se distribuye bajo [MIT](mm/LICENSE); los datos y la documentación, bajo [CC BY 4.0](mm/LICENSE-DATA.md).
 
 ## Referencias
 

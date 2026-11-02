@@ -1,4 +1,4 @@
-snakemake>=8,<10
-pandas>=2.1,<4
-statsmodels>=0.14,<1
-matplotlib>=3.8,<4
+snakemake==9.27.1
+pandas==3.1.0
+statsmodels==0.15.0
+matplotlib==3.11.2

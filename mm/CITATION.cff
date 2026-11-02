@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this artifact, please cite it as described below."
+title: "Benchmark reproducible de multiplicación de matrices NxN en C++, Go, Java y Python"
+authors:
+  - family-names: "Valenzuela Tapia"
+    given-names: "Jonathan Alexis"
+    affiliation: "Universidad de Santiago de Chile (USACH)"
+version: 1.0.0
+date-released: 2026-11-02
+repository-code: "https://github.com/jonathanvalenzuelat-Usach/Computacion_ExperimentalM2"
+license: MIT
+keywords:
+  - benchmark
+  - matrix multiplication
+  - reproducibility
+  - Snakemake
+  - Docker
+type: software
