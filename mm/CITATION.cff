@@ -7,6 +7,7 @@ authors:
     affiliation: "Universidad de Santiago de Chile (USACH)"
 version: 1.0.0
 date-released: 2026-11-02
+doi: "10.5281/zenodo.23891451"
 repository-code: "https://github.com/jonathanvalenzuelat-Usach/Computacion_ExperimentalM2"
 license: MIT
 keywords:

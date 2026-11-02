@@ -3,7 +3,7 @@
 **Autor:** Jonathan Alexis Valenzuela Tapia  
 **Programa:** Doctorado en Ingeniería en Informática, USACH  
 **Curso:** Experimentación Computacional  
-**Versión:** 1.0.0, artifact preparado para depósito en Zenodo
+**Versión:** 1.0.0, archivada en Zenodo
 
 ## Descripción general
 
@@ -93,7 +93,15 @@ La ejecución validada generó 120 mediciones (30 por lenguaje) en [benchmark.cs
 
 La versión 1.0.0 incluye el código y el pipeline, resultados de referencia, [licencia MIT para el software](mm/LICENSE), [CC BY 4.0 para los datos y documentación](mm/LICENSE-DATA.md), [mini datasheet FAIR](mm/DATASHEET.md), metadatos de citación y una [plantilla de evaluación cruzada](mm/REVIEW-CROSS.md). Las instrucciones completas para quien evalúe el artifact están en [mm/README.md](mm/README.md).
 
-**DOI Zenodo:** pendiente de publicación y asignación. Este artifact aún no debe citarse como un depósito publicado; el DOI se añadirá aquí, en `mm/README.md` y en `mm/CITATION.cff` una vez que Zenodo confirme la publicación. Para las condiciones de uso, consulta la [licencia MIT del código](mm/LICENSE) y la [licencia CC BY 4.0 de los datos y documentación](mm/LICENSE-DATA.md).
+**DOI de la versión 1.0.0:** [10.5281/zenodo.23891451](https://doi.org/10.5281/zenodo.23891451)
+
+**Registro de Zenodo:** [zenodo.org/records/23891451](https://zenodo.org/records/23891451)
+
+**DOI de todas las versiones:** [10.5281/zenodo.23891450](https://doi.org/10.5281/zenodo.23891450)
+
+**Etiqueta estable en GitHub:** [v1.0.0](https://github.com/jonathanvalenzuelat-Usach/Computacion_ExperimentalM2/tree/v1.0.0)
+
+Para las condiciones de uso, consulta la [licencia MIT del código](mm/LICENSE) y la [licencia CC BY 4.0 de los datos y documentación](mm/LICENSE-DATA.md).
 
 ## Ejecución con Docker
 

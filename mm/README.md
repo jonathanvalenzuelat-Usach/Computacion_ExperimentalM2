@@ -3,7 +3,7 @@
 **Autor:** Jonathan Alexis Valenzuela Tapia  
 **Programa:** Doctorado en Ingeniería en Informática, USACH  
 **Curso:** Experimentación Computacional  
-**Versión:** 1.0.0 (semana 5; DOI Zenodo pendiente de publicación)
+**Versión:** 1.0.0 (semana 5; publicada en Zenodo)
 
 ## Descripción general
 
@@ -168,7 +168,13 @@ Esta evaluación confirma el cumplimiento funcional de los requisitos de automat
 
 La versión 1.0.0 incluye el código fuente de los cuatro lenguajes, los Dockerfiles, el workflow y su configuración, dependencias fijadas, scripts de validación/análisis, CSV individuales, `benchmark.csv`, checksums, registro del entorno, resultados estadísticos, tablas y gráfico. También incluye [LICENSE](LICENSE) (MIT para el software), [LICENSE-DATA.md](LICENSE-DATA.md) (CC BY 4.0 para datos/documentación), [DATASHEET.md](DATASHEET.md) (descripción FAIR), [CITATION.cff](CITATION.cff) y [REVIEW-CROSS.md](REVIEW-CROSS.md). Las licencias de Ubuntu y demás componentes de terceros no cambian.
 
-**DOI de Zenodo:** pendiente de crear y publicar el depósito. No cites un DOI hasta que Zenodo confirme la publicación. Cuando exista, añade el DOI y el enlace del registro a este README, a `CITATION.cff` y al README principal del repositorio GitHub.
+**DOI de la versión 1.0.0:** [10.5281/zenodo.23891451](https://doi.org/10.5281/zenodo.23891451)
+
+**Registro de Zenodo:** [zenodo.org/records/23891451](https://zenodo.org/records/23891451)
+
+**DOI de todas las versiones:** [10.5281/zenodo.23891450](https://doi.org/10.5281/zenodo.23891450)
+
+**Etiqueta estable en GitHub:** [v1.0.0](https://github.com/jonathanvalenzuelat-Usach/Computacion_ExperimentalM2/tree/v1.0.0)
 
 ### Reproducción independiente para el evaluador
 
@@ -188,7 +194,7 @@ La versión 1.0.0 incluye el código fuente de los cuatro lenguajes, los Dockerf
 
 La primera reproducción puede tardar más de una hora, principalmente por Python con N=1500. `snakemake --cores 1 --forceall` fuerza una nueva medición completa. Para verificar únicamente la planificación, sin correr contenedores, usa `snakemake --cores 1 --dry-run`.
 
-El depósito de Zenodo solo se considerará publicado tras completar la publicación en Zenodo y obtener su DOI. La revisión cruzada por un estudiante externo tampoco se considera terminada hasta completar y guardar el registro de [REVIEW-CROSS.md](REVIEW-CROSS.md).
+El artifact está publicado y archivado en Zenodo con el DOI indicado arriba. La revisión cruzada por un estudiante externo sigue pendiente hasta que el evaluador complete y guarde el registro de [REVIEW-CROSS.md](REVIEW-CROSS.md).
 
 ## Resultados esperados
 

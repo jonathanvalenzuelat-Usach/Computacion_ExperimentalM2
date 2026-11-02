@@ -6,7 +6,7 @@
 - **Versión:** 1.0.0.
 - **Responsable:** Jonathan Alexis Valenzuela Tapia, Universidad de Santiago de Chile (USACH).
 - **Pregunta:** ¿Cómo varía el tiempo de multiplicación naive de matrices entre cuatro implementaciones y tres tamaños de entrada?
-- **Identificador persistente:** DOI de Zenodo pendiente de publicación. La versión de código se identifica también con la etiqueta Git `v1.0.0` cuando esta se publique.
+- **Identificador persistente:** DOI de la versión 1.0.0 en Zenodo: [10.5281/zenodo.23891451](https://doi.org/10.5281/zenodo.23891451). El DOI que resuelve a todas las versiones es [10.5281/zenodo.23891450](https://doi.org/10.5281/zenodo.23891450). La versión de código también está identificada con la etiqueta Git [v1.0.0](https://github.com/jonathanvalenzuelat-Usach/Computacion_ExperimentalM2/tree/v1.0.0).
 
 ## Composición y procedencia
 
@@ -32,8 +32,8 @@
 
 ## FAIR: localización, acceso e interoperabilidad
 
-- **Findable (localizable):** tras publicar el depósito, el registro de Zenodo y su DOI se enlazarán aquí y desde GitHub. Mientras no haya DOI, el identificador está pendiente y este artifact no debe citarse como si ya estuviera archivado.
-- **Accessible (accesible):** el CSV es texto plano y se puede descargar desde el repositorio y el futuro registro de Zenodo. No contiene datos personales ni requiere credenciales para su lectura pública una vez publicado.
+- **Findable (localizable):** el [registro público de Zenodo](https://zenodo.org/records/23891451), el DOI de esta versión y el DOI de todas las versiones están enlazados aquí y desde GitHub.
+- **Accessible (accesible):** el CSV es texto plano y se puede descargar desde el repositorio y el [registro público de Zenodo](https://zenodo.org/records/23891451). No contiene datos personales ni requiere credenciales para su lectura.
 - **Interoperable:** usa CSV UTF-8, nombres de campos explícitos y tipos simples compatibles con R, Python, hojas de cálculo y otras herramientas estadísticas.
 - **Reusable (reutilizable):** incluye código, configuración, Snakefile, instrucciones, checksums y registro de entorno. El código tiene licencia MIT y los datos/documentación CC BY 4.0; cita este artifact y conserva la atribución.
 
@@ -47,4 +47,4 @@
 
 ## Reutilización y citación
 
-Para repetir el experimento, sigue `README.md`, construye localmente las cuatro imágenes Docker y ejecuta `snakemake --cores 1`. Para citar, usa `CITATION.cff`; reemplaza “DOI pendiente” una vez publicado el registro. Publicación de Zenodo: pendiente.
+Para repetir el experimento, sigue `README.md`, construye localmente las cuatro imágenes Docker y ejecuta `snakemake --cores 1`. Para citar, usa `CITATION.cff` o el DOI de la versión 1.0.0: [10.5281/zenodo.23891451](https://doi.org/10.5281/zenodo.23891451). Registro público de Zenodo: [zenodo.org/records/23891451](https://zenodo.org/records/23891451).
