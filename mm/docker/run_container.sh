@@ -4,6 +4,7 @@ SIZES="${SIZES:-500 1000 1500}"
 REPS="${REPS:-10}"
 SEED="${SEED:-42}"
 OUT=/app/results
+CHECKSUM_FILE="${CHECKSUM_FILE:-$OUT/checksums.txt}"
 mkdir -p "$OUT"
 rm -f "$OUT/$LANG_ID.csv"
 
@@ -19,5 +20,5 @@ rm -f "$OUT/$LANG_ID.csv"
 
 for n in $SIZES; do
   echo ">> $LANG_ID N=$n" >&2
-  $RUN_CMD "$n" "$REPS" "$SEED" "$OUT/$LANG_ID.csv" >> "$OUT/checksums.txt"
+  $RUN_CMD "$n" "$REPS" "$SEED" "$OUT/$LANG_ID.csv" >> "$CHECKSUM_FILE"
 done

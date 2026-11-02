@@ -1,0 +1,12 @@
+sizes:
+  - 500
+  - 1000
+  - 1500
+repetitions: 10
+seed: 42
+alpha: 0.05
+images:
+  cpp: matmul-cpp
+  go: matmul-go
+  python: matmul-python
+  java: matmul-java

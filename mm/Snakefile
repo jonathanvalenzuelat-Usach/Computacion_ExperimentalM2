@@ -1,0 +1,99 @@
+configfile: "config.yaml"
+
+LANGUAGES = ["cpp", "go", "python", "java"]
+SIZES = [int(size) for size in config["sizes"]]
+REPETITIONS = int(config["repetitions"])
+SEED = int(config["seed"])
+RESULTS = "results"
+ANALYSIS_OUTPUTS = [
+    f"{RESULTS}/descriptive.csv",
+    f"{RESULTS}/anova.csv",
+    f"{RESULTS}/tukey_hsd.csv",
+    f"{RESULTS}/analysis.md",
+    f"{RESULTS}/benchmark_by_language.png",
+]
+
+workdir: workflow.basedir
+
+
+rule all:
+    input:
+        expand(f"{RESULTS}/{{language}}.csv", language=LANGUAGES),
+        f"{RESULTS}/benchmark.csv",
+        f"{RESULTS}/checksums.txt",
+        f"{RESULTS}/validated.ok",
+        ANALYSIS_OUTPUTS
+
+
+rule run_language_container:
+    input:
+        source=lambda wildcards: {
+            "cpp": "src/cpp/matmul.cpp",
+            "go": "src/go/matmul.go",
+            "python": "src/python/matmul.py",
+            "java": "src/java/MatMul.java",
+        }[wildcards.language],
+        dockerfile=lambda wildcards: f"docker/Dockerfile.{wildcards.language}",
+        runner="docker/run_container.sh"
+    output:
+        csv=f"{RESULTS}/{{language}}.csv",
+        checksums=f"{RESULTS}/checksums_{{language}}.txt"
+    log:
+        f"{RESULTS}/logs/{{language}}.log"
+    params:
+        image=lambda wildcards: config["images"][wildcards.language],
+        sizes=" ".join(map(str, SIZES)),
+        repetitions=REPETITIONS,
+        seed=SEED
+    wildcard_constraints:
+        language="|".join(LANGUAGES)
+    script:
+        "scripts/run_container.py"
+
+
+rule merge_results:
+    input:
+        csvs=expand(f"{RESULTS}/{{language}}.csv", language=LANGUAGES),
+        checksums=expand(
+            f"{RESULTS}/checksums_{{language}}.txt", language=LANGUAGES
+        )
+    output:
+        benchmark=f"{RESULTS}/benchmark.csv",
+        checksums=f"{RESULTS}/checksums.txt"
+    log:
+        f"{RESULTS}/logs/merge.log"
+    params:
+        sizes=SIZES,
+        repetitions=REPETITIONS
+    script:
+        "scripts/merge_results.py"
+
+
+rule validate_results:
+    input:
+        benchmark=f"{RESULTS}/benchmark.csv",
+        checksums=f"{RESULTS}/checksums.txt",
+        csvs=expand(f"{RESULTS}/{{language}}.csv", language=LANGUAGES)
+    output:
+        touch(f"{RESULTS}/validated.ok")
+    params:
+        sizes=",".join(map(str, SIZES)),
+        repetitions=REPETITIONS
+    log:
+        f"{RESULTS}/logs/validation.log"
+    script:
+        "scripts/validate_results.py"
+
+
+rule statistical_analysis:
+    input:
+        benchmark=f"{RESULTS}/benchmark.csv",
+        validated=f"{RESULTS}/validated.ok"
+    output:
+        ANALYSIS_OUTPUTS
+    log:
+        f"{RESULTS}/logs/analysis.log"
+    params:
+        alpha=float(config["alpha"])
+    script:
+        "scripts/analyze.py"

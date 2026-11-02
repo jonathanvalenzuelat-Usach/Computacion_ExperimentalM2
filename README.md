@@ -3,7 +3,7 @@
 **Autor:** Jonathan Alexis Valenzuela Tapia  
 **Programa:** Doctorado en Ingeniería en Informática, USACH  
 **Curso:** Experimentación Computacional  
-**Estado:** Semana 3, versión reproducible con Docker y validación funcional
+**Estado:** Semana 4, pipeline Snakemake ejecutado y resultados validados
 
 ## Descripción general
 
@@ -24,7 +24,7 @@ La implementación sigue una estrategia equivalente en los cuatro casos: mismo a
 
 - **Diseño factorial:** 4 lenguajes × 3 tamaños de matriz (`500`, `1000`, `1500`)
 - **Repeticiones:** 10 por condición
-- **Aleatorización:** orden aleatorio con semilla fija `42`
+- **Semilla:** `42` para generar entradas idénticas en las cuatro implementaciones; el script nativo aleatoriza bloques
 - **Validación:** cada ejecución genera un checksum para comprobar que todas las implementaciones producen el mismo resultado
 
 ## Lenguajes implementados
@@ -39,28 +39,14 @@ La implementación sigue una estrategia equivalente en los cuatro casos: mismo a
 ```text
 .
 ├── README.md
-├── src/
-│   ├── cpp/
-│   ├── go/
-│   ├── java/
-│   └── python/
-├── docker/
-│   ├── Dockerfile.cpp
-│   ├── Dockerfile.go
-│   ├── Dockerfile.java
-│   ├── Dockerfile.python
-│   ├── Dockerfile.all
-│   ├── run_container.sh
-│   └── run_lang.sh
-├── scripts/
-│   ├── run_all.sh
-│   ├── gen_order.py
-│   ├── record_env.py
-│   ├── verify.py
-│   └── summarize.py
-├── results/
-├── results_semana2_windows/
-└── .gitignore
+└── mm/
+    ├── Snakefile
+    ├── config.yaml
+    ├── requirements.txt
+    ├── docker/       # Dockerfiles y runner de contenedor
+    ├── scripts/      # benchmark, integración, validación y análisis
+    ├── src/          # implementaciones C++, Go, Java y Python
+    └── results/      # resultados, análisis y gráfico generado
 ```
 
 ## Requisitos
@@ -73,21 +59,40 @@ La implementación sigue una estrategia equivalente en los cuatro casos: mismo a
 
 ## Ejecución rápida
 
-Desde la raíz del proyecto:
+La ejecución nativa se realiza desde el artifact `mm/`:
 
 ```bash
-./scripts/run_all.sh
+./mm/scripts/run_all.sh
 ```
 
 También puede ejecutarse con tamaños reducidos:
 
 ```bash
-SIZES="100 200" REPS=3 ./scripts/run_all.sh
+SIZES="100 200" REPS=3 ./mm/scripts/run_all.sh
 ```
+
+## Pipeline automatizado del artifact
+
+La versión con Docker y Snakemake está en [mm/](mm/); su guía completa está en [mm/README.md](mm/README.md). En Windows, ejecuta desde WSL2 con Docker Desktop integrado. Desde esa carpeta, construye manualmente las cuatro imágenes locales y luego ejecuta Snakemake:
+
+```bash
+cd mm
+docker build --pull -f docker/Dockerfile.cpp -t matmul-cpp .
+docker build --pull -f docker/Dockerfile.go -t matmul-go .
+docker build --pull -f docker/Dockerfile.python -t matmul-python .
+docker build --pull -f docker/Dockerfile.java -t matmul-java .
+python -m pip install -r requirements.txt
+snakemake --cores 1
+```
+
+La ejecución validada generó 120 mediciones (30 por lenguaje) en [benchmark.csv](mm/results/benchmark.csv) y los checksums coinciden entre lenguajes para los tres tamaños. El análisis detectó efectos significativos del lenguaje (p = 3,74 × 10⁻¹⁵³), tamaño (p = 5,04 × 10⁻¹²⁹) e interacción lenguaje × tamaño (p = 2,90 × 10⁻¹⁴⁸); por ello, el reporte presenta comparaciones de Tukey por estrato. Los resultados completos están en [analysis.md](mm/results/analysis.md), [anova.csv](mm/results/anova.csv) y [benchmark_by_language.png](mm/results/benchmark_by_language.png). La evidencia y evaluación requisito por requisito están en [mm/README.md](mm/README.md). La pauta de semana 4 no solicita diagnósticos de los supuestos del ANOVA; el análisis no los incluye, por lo que las inferencias deben leerse con esa limitación.
 
 ## Ejecución con Docker
 
+Para ejecutar un contenedor manualmente, primero cambia a la carpeta `mm/` y construye las imágenes siguiendo las instrucciones de su [README](mm/README.md):
+
 ```bash
+cd mm
 docker build -f docker/Dockerfile.cpp -t matmul-cpp .
 docker build -f docker/Dockerfile.go -t matmul-go .
 docker build -f docker/Dockerfile.java -t matmul-java .
@@ -117,7 +122,7 @@ El proyecto está diseñado para ser reproducible y reutilizable bajo los princi
 
 - entorno de ejecución
 - versiones de software
-- orden aleatorizado de ejecuciones
+- semilla y datos de entrada reproducibles; el orden aleatorio aplica al script nativo, no al flujo Docker de Snakemake
 - validación de resultados por checksum
 - estructura modular del experimento
 

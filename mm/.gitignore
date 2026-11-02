@@ -3,6 +3,8 @@
 !/README.md
 
 # Build outputs and generated artifacts
+.snakemake/
+results/logs/
 bin/
 build/
 dist/
