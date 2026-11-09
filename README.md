@@ -91,7 +91,7 @@ La ejecución validada generó 120 mediciones (30 por lenguaje) en [benchmark.cs
 
 ## Publicación y reutilización (semana 5)
 
-La versión 1.0.0 incluye el código y el pipeline, resultados de referencia, [licencia MIT para el software](mm/LICENSE), [CC BY 4.0 para los datos y documentación](mm/LICENSE-DATA.md), [mini datasheet FAIR](mm/DATASHEET.md), metadatos de citación y una [plantilla de evaluación cruzada](mm/REVIEW-CROSS.md). Las instrucciones completas para quien evalúe el artifact están en [mm/README.md](mm/README.md).
+La versión 1.0.0 incluye el código y el pipeline, resultados de referencia, [licencia MIT para el software](mm/LICENSE), [CC BY 4.0 para los datos y documentación](mm/LICENSE-DATA.md), [mini datasheet FAIR](mm/DATASHEET.md) y metadatos de citación. Las instrucciones completas para quien evalúe el artifact están en [mm/README.md](mm/README.md).
 
 **DOI de la versión 1.0.0:** [10.5281/zenodo.23891451](https://doi.org/10.5281/zenodo.23891451)
 
@@ -102,6 +102,14 @@ La versión 1.0.0 incluye el código y el pipeline, resultados de referencia, [l
 **Etiqueta estable en GitHub:** [v1.0.0](https://github.com/jonathanvalenzuelat-Usach/Computacion_ExperimentalM2/tree/v1.0.0)
 
 Para las condiciones de uso, consulta la [licencia MIT del código](mm/LICENSE) y la [licencia CC BY 4.0 de los datos y documentación](mm/LICENSE-DATA.md).
+
+### Evaluación cruzada de artifacts de compañeros
+
+Se descargaron y evaluaron los artifacts publicados por [Joel Fuertes](https://doi.org/10.5281/zenodo.23988249), [Jorge Fornes](https://doi.org/10.5281/zenodo.23987654), [Pier Miqueles](https://doi.org/10.5281/zenodo.23954259) y [Alejandro Pirez](https://doi.org/10.5281/zenodo.23954875). En el entorno de evaluación (Windows 11, Docker Desktop Linux, Docker 29.9.1, Python 3.12.10 y Snakemake 9.27.1) se construyeron y ejecutaron los 16 contenedores de los cuatro lenguajes.
+
+Las pruebas smoke de Jorge, Pier y Alejandro completaron sus pipelines, generando los CSV individuales, `benchmark.csv` (24, 24 y 16 mediciones, respectivamente) y los productos estadísticos y gráficos. Para Joel, el dry-run del pipeline fue correcto y los cuatro contenedores generaron 10 mediciones cada uno para N=500; no se completó la integración ni el análisis. En la prueba reducida de Jorge faltaba inicialmente `seaborn`; al instalar las dependencias indicadas por su artifact, el análisis terminó. También se observó una diferencia de checksum de 0.000003 en N=100 entre Java y los otros lenguajes, que conviene revisar con una tolerancia explícita.
+
+Estas pruebas reducidas verifican la construcción y el funcionamiento básico, pero **no son una reproducción completa**: no se ejecutaron las 120 mediciones (N=500, 1000 y 1500; 10 repeticiones) de los artifacts evaluados y no se validan sus resultados publicados ni sus conclusiones estadísticas. El detalle del entorno, comandos, resultados e incidencias está en el [registro de evaluación cruzada](mm/REVIEW-CROSS.md).
 
 ## Ejecución con Docker
 
