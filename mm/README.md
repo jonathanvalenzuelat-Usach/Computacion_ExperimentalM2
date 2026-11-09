@@ -194,7 +194,16 @@ La versión 1.0.0 incluye el código fuente de los cuatro lenguajes, los Dockerf
 
 La primera reproducción puede tardar más de una hora, principalmente por Python con N=1500. `snakemake --cores 1 --forceall` fuerza una nueva medición completa. Para verificar únicamente la planificación, sin correr contenedores, usa `snakemake --cores 1 --dry-run`.
 
-El artifact está publicado y archivado en Zenodo con el DOI indicado arriba. La revisión cruzada por un estudiante externo sigue pendiente hasta que el evaluador complete y guarde el registro de [REVIEW-CROSS.md](REVIEW-CROSS.md).
+### Resultado de la evaluación cruzada
+
+El 8 de noviembre de 2026 se evaluaron los artifacts publicados por [Joel Fuertes](https://doi.org/10.5281/zenodo.23988249), [Jorge Fornes](https://doi.org/10.5281/zenodo.23987654), [Pier Miqueles](https://doi.org/10.5281/zenodo.23954259) y [Alejandro Pirez](https://doi.org/10.5281/zenodo.23954875). La evaluación se realizó en Windows 11 con Docker Desktop Linux 29.9.1, Python 3.12.10 y Snakemake 9.27.1. Se construyeron y ejecutaron los cuatro contenedores de cada artifact.
+
+- **Jorge:** el pipeline smoke completó 15/15 pasos con tamaños reducidos, generó 24 mediciones y sus productos estadísticos y gráficos. Inicialmente faltaba `seaborn`; al instalar las dependencias documentadas, el análisis terminó. En N=100 se observó una diferencia de checksum de 0.000003 en Java frente a los otros lenguajes.
+- **Pier:** el pipeline smoke documentado completó 9/9 pasos, generó 24 mediciones, `benchmark.csv`, verificación de equivalencia, análisis y figuras.
+- **Alejandro:** el pipeline smoke documentado completó 15/15 pasos, generó 16 mediciones, `benchmark.csv`, análisis y figuras.
+- **Joel:** el dry-run del pipeline fue correcto y los cuatro contenedores generaron 10 mediciones cada uno para N=500. No se completaron la integración ni el análisis del pipeline.
+
+Estas pruebas reducidas verifican la construcción y el funcionamiento básico, pero **no constituyen una reproducción completa**: no se ejecutaron las 120 mediciones de ninguno de los cuatro artifacts y no se validan sus resultados publicados ni sus conclusiones estadísticas. El entorno, los comandos, las salidas y las incidencias están registrados en [REVIEW-CROSS.md](REVIEW-CROSS.md).
 
 ## Resultados esperados
 
